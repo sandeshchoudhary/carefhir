@@ -45,6 +45,7 @@ const Home = () => {
   const updateServer = () => {
     localStorage.setItem('fhirServer', fhirServer);
     setModalState(false);
+    setPatients([]);
   }
 
   useEffect(() => {

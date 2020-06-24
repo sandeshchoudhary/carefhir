@@ -8,7 +8,7 @@ const PatientList = (props) => {
   const getPatientCard = (patients = []) => {
     return patients.map((item, index) => {
       return (
-        <div className="PatientList-itemWrapper">
+        <div className="PatientList-itemWrapper" key={index}>
           <div className="PatientList-item-heading">
             <Avatar appearance="primary">
               {`${item.resource.name[0].given[0].charAt(0)}${item.resource.name[0].family.charAt(0)}`}
