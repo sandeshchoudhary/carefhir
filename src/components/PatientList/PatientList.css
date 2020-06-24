@@ -1,0 +1,33 @@
+.PatientList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.PatientList-item-heading {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.PatientList-item-heading .Badge {
+  margin-left: 8px;
+}
+
+.PatientList-itemWrapper {
+  min-width: 400px;
+  padding: 16px;
+  border-bottom: var(--border);
+}
+
+.PatientList-item-info {
+  padding-left: 48px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.PatientList-item-info .Subheading {
+  margin-right: 4px;
+}
