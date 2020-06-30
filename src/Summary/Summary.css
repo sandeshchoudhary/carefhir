@@ -1,0 +1,12 @@
+.Summary {
+  background-color: var(--secondary-lightest);
+  height: calc(100vh);
+}
+
+.Summary-body {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+

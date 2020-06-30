@@ -1128,10 +1128,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@innovaccer/design-system@^1.0.0-17":
-  version "1.0.0-17"
-  resolved "http://52.35.230.55/@innovaccer%2fdesign-system/-/design-system-1.0.0-17.tgz#791c1942671f1835a66492acffd7b7708ddc69a0"
-  integrity sha512-VT+cvN8ynIt1DJSqXoWu4B0oJrnSONq5G9FcjgD1LDoNgWw4RewTPRGUFDHQbLIHx65W9pTmoyf6r8TUJJ+EhQ==
+"@innovaccer/design-system@1.0.0-20":
+  version "1.0.0-20"
+  resolved "http://52.35.230.55/@innovaccer%2fdesign-system/-/design-system-1.0.0-20.tgz#fe0c518efaf83a8d372985be9713e9943b5f17d2"
+  integrity sha512-YHyJTg33jaFjYIx7OAvwzNahnk7lSB2fsZiOC9cdCdeybS+9BBwQNKUMJIcfDpzzMwZYMlcHydPfI5JTCTFPHw==
   dependencies:
     "@types/classnames" "^2.2.9"
     axios "^0.19.2"

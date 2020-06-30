@@ -19,6 +19,7 @@
   min-width: 400px;
   padding: 16px;
   border-bottom: var(--border);
+  cursor: pointer;
 }
 
 .PatientList-item-info {

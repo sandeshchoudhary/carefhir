@@ -3,12 +3,12 @@ import { Avatar, Heading, Badge, Subheading } from '@innovaccer/design-system';
 import './PatientList.css';
 
 const PatientList = (props) => {
-  const { data = {} } = props;
+  const { data = {}, onClick } = props;
 
   const getPatientCard = (patients = []) => {
     return patients.map((item, index) => {
       return (
-        <div className="PatientList-itemWrapper" key={index}>
+        <div className="PatientList-itemWrapper" key={index} onClick={ev => onClick(ev, item.resource.id)}>
           <div className="PatientList-item-heading">
             <Avatar appearance="primary">
               {`${item.resource.name[0].given[0].charAt(0)}${item.resource.name[0].family.charAt(0)}`}

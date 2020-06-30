@@ -1,5 +1,6 @@
 .Home {
   background-color: var(--secondary-lightest);
+  height: 100vh;
 }
 
 .PageHeader-wrapper {

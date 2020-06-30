@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Modal, ModalBody, ModalFooter, ModalHeader, Input, Button, Heading } from '@innovaccer/design-system';
+import { useHistory } from 'react-router-dom';
 import './Home.css';
 import { getPatients } from '../api';
 import PatientList from '../components/PatientList';
 
 const Home = () => {
+  let history = useHistory();
   const getServer = () => {
     const server = localStorage.getItem('fhirServer');
     return server ? server : '';
@@ -75,6 +77,10 @@ const Home = () => {
       })
   }
 
+  const drillToPatientInfo = (ev, id) => {
+    history.push(`/patients/${id}`);
+  };
+
   return (
     <div className="Home">
       <Modal {...modalOptions}>
@@ -117,6 +123,7 @@ const Home = () => {
         <div style={{height: 'calc(100vh - 112px', overflowY: 'scroll'}}>
           <PatientList
             data={patients}
+            onClick={drillToPatientInfo}
           />
         </div>
       )}
