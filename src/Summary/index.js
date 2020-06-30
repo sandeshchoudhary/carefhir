@@ -14,13 +14,20 @@ const Summary = () => {
     return server ? server : '';
   };
 
+  const getHeaders = () => {
+    const data = localStorage.getItem('serverHeaders');
+    return data ? data: '{}';
+  };
+
   const [fhirServer, setServer] = useState(getServer());
+  const [serverHeaders, setHeaders] = useState(getHeaders());
   const [patientData, setPatientData] = useState(null);
 
   useEffect(() => {
     setServer(getServer());
+    setHeaders(getHeaders());
     if (getServer()) {
-      getPatientData(fhirServer)(patientId)
+      getPatientData(fhirServer, JSON.parse(serverHeaders))(patientId)
       .then(data => {
         setPatientData(data.data);
       })
@@ -31,8 +38,6 @@ const Summary = () => {
       history.push('/');
     }
   }, [localStorage.getItem('fhirServer')]);
-
-  console.log(patientData)
 
   const breadcrumbData = [
     {

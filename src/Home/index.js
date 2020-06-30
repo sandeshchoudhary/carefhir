@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Modal, ModalBody, ModalFooter, ModalHeader, Input, Button, Heading } from '@innovaccer/design-system';
+import { Modal, ModalBody, ModalFooter, ModalHeader, Input, Button, Heading, Textarea, Label } from '@innovaccer/design-system';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
 import { getPatients } from '../api';
@@ -12,7 +12,14 @@ const Home = () => {
     return server ? server : '';
   };
 
+  const getHeaders = () => {
+    const data = localStorage.getItem('serverHeaders');
+    return data ? data: '{}';
+  };
+
   const [fhirServer, setServer] = useState(getServer());
+  const [serverHeaders, setHeaders] = useState(getHeaders());
+  const [invalidHeader, setHeaderStatus] = useState(false);
   const [modalState, setModalState] = useState(getServer() ? false : true);
   const [searchQuery, setSearchQuery] = useState('');
   const [patients, setPatients] = useState([]);
@@ -44,16 +51,30 @@ const Home = () => {
     setServer(value);
   };
 
+  const handleHeaderInput = (value) => {
+    let temp;
+    try {
+      temp = JSON.parse(value);
+      setHeaderStatus(false);
+      setHeaders(value)
+    } catch (e) {
+      setHeaderStatus(true);
+      setHeaders(value);
+    };
+  };
+
   const updateServer = () => {
     localStorage.setItem('fhirServer', fhirServer);
+    localStorage.setItem('serverHeaders', serverHeaders);
     setModalState(false);
     setPatients([]);
   }
 
   useEffect(() => {
     setServer(getServer());
+    setHeaders(getHeaders());
     if (getServer()) {
-      getPatients(fhirServer)(searchQuery)
+      getPatients(fhirServer, JSON.parse(serverHeaders))(searchQuery)
       .then(data => {
         setPatients(data.data);
       })
@@ -68,7 +89,7 @@ const Home = () => {
   };
 
   const handleSearch = () => {
-    getPatients(fhirServer)(searchQuery)
+    getPatients(fhirServer, JSON.parse(serverHeaders))(searchQuery)
       .then(data => {
         setPatients(data.data);
       })
@@ -81,22 +102,33 @@ const Home = () => {
     history.push(`/patients/${id}`);
   };
 
+  console.log(patients)
+
   return (
     <div className="Home">
       <Modal {...modalOptions}>
         <ModalHeader {...modalHeaderOptions} />
         <ModalBody>
-        <Input
-          clearButton={true}
-          value={fhirServer}
-          name="input"
-          placeholder="Search"
-          onChange={(ev) => handleServerInput(ev.target.value)}
-          onClear={() => handleServerInput('')}
-        />
+          <Label style={{margin: '0px 0 4px'}}>Address</Label>
+          <Input
+            clearButton={true}
+            value={fhirServer}
+            name="input"
+            placeholder="Search"
+            onChange={(ev) => handleServerInput(ev.target.value)}
+            onClear={() => handleServerInput('')}
+          />
+          <Label style={{margin: '8px 0 4px'}}>Headers</Label>
+          <Textarea
+            name="Textarea"
+            placeholder="Headers"
+            rows={5}
+            onChange={ev => handleHeaderInput(ev.target.value)}
+            defaultValue={serverHeaders}
+            error={invalidHeader} />
         </ModalBody>
         <ModalFooter>
-          <Button appearance="primary" onClick={() => updateServer()} disabled={!fhirServer}>Submit</Button>
+          <Button appearance="primary" onClick={() => updateServer()} disabled={!fhirServer || invalidHeader}>Submit</Button>
         </ModalFooter>
       </Modal>
       <div className="PageHeader-wrapper">
@@ -119,7 +151,7 @@ const Home = () => {
           />
         <Button appearance="primary" onClick={() => handleSearch()}>Search</Button>
       </div>
-      {patients && patients.total > 0 && (
+      {patients && patients.entry && patients.entry.length > 0 && (
         <div style={{height: 'calc(100vh - 112px', overflowY: 'scroll'}}>
           <PatientList
             data={patients}

@@ -43,13 +43,13 @@ const PatientInfo = (props) => {
           <Column {...columnOptions}>
             <div className="PatientInfo-item">
               <Subheading appearance="default">Marital Status: </Subheading>
-              <Subheading appearance="subtle">{data.maritalStatus.text}</Subheading>
+              <Subheading appearance="subtle">{data.maritalStatus ? data.maritalStatus.text : 'N/A'}</Subheading>
             </div>
           </Column>
           <Column {...columnOptions}>
             <div className="PatientInfo-item">
               <Subheading appearance="default">Contact: </Subheading>
-              <Subheading appearance="subtle">{data.telecom[0].value}</Subheading>
+              <Subheading appearance="subtle">{data.telecom ? data.telecom[0].value : 'N/A'}</Subheading>
             </div>
           </Column>
         </Row>
