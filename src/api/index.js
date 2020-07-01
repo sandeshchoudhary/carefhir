@@ -25,10 +25,22 @@ export const getPatients = (serverAddress, serverHeaders = {}) => (params) => {
   return axios.get(`${serverAddress}/Patient?${queryParams}`, {
     headers: serverHeaders
   });
-}
+};
 
 export const getPatientData = (serverAddress, serverHeaders = {}) => (id) => {
   return axios.get(`${serverAddress}/Patient/${id}`, {
     headers: serverHeaders
   });
-}
+};
+
+export const getObservationData = (serverAddress, serverHeaders = {}) => (id) => {
+  return axios.get(`${serverAddress}/Observation?subject=Patient/${id}`, {
+    headers: serverHeaders
+  });
+};
+
+export const getEncounterData = (serverAddress, serverHeaders = {}) => (id) => {
+  return axios.get(`${serverAddress}/Encounter?subject=Patient/${id}`, {
+    headers: serverHeaders
+  });
+};

@@ -12,15 +12,16 @@ const PatientInfo = (props) => {
   const { data = {} } = props;
 
   return (
-    <Card shadow="dark" style={{
-      width: '600px',
-      padding: '16px',
-      backgroundColor: 'white'
-    }}>
+    <Card
+      shadow="dark"
+      style={{
+        width: '600px',
+        padding: '16px',
+        backgroundColor: 'white'
+      }}
+    >
       <div className="PatientInfo-heading">
-        <Avatar appearance="primary">
-          {`${data.name[0].given[0].charAt(0)}${data.name[0].family.charAt(0)}`}
-        </Avatar>
+        <Avatar appearance="primary">{`${data.name[0].given[0].charAt(0)}${data.name[0].family.charAt(0)}`}</Avatar>
         <Heading size="m">{`${data.name[0].given[0]}, ${data.name[0].family}`}</Heading>
         <Badge appearance="secondary">{data.id}</Badge>
       </div>
