@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Modal, ModalBody, ModalFooter, ModalHeader, Input, Button, Heading, Textarea, Label } from '@innovaccer/design-system';
+import { Modal, ModalBody, ModalFooter, ModalHeader, Input, Button, Heading, Textarea, Label, Dropdown } from '@innovaccer/design-system';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
 import { getPatients } from '../api';
@@ -22,6 +22,7 @@ const Home = () => {
   const [invalidHeader, setHeaderStatus] = useState(false);
   const [modalState, setModalState] = useState(getServer() ? false : true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchGender, setSearchGender] = useState('');
   const [patients, setPatients] = useState([]);
 
   const onModalClose = () => {
@@ -74,7 +75,7 @@ const Home = () => {
     setServer(getServer());
     setHeaders(getHeaders());
     if (getServer()) {
-      getPatients(fhirServer, JSON.parse(serverHeaders))(searchQuery)
+      getPatients(fhirServer, JSON.parse(serverHeaders))({name: searchQuery, gender: searchGender})
       .then(data => {
         setPatients(data.data);
       })
@@ -88,8 +89,12 @@ const Home = () => {
     setSearchQuery(value);
   };
 
+  const handleGenderInput = (selected, name) => {
+    setSearchGender(selected);
+  }
+
   const handleSearch = () => {
-    getPatients(fhirServer, JSON.parse(serverHeaders))(searchQuery)
+    getPatients(fhirServer, JSON.parse(serverHeaders))({name: searchQuery, gender: searchGender})
       .then(data => {
         setPatients(data.data);
       })
@@ -102,7 +107,10 @@ const Home = () => {
     history.push(`/patients/${id}`);
   };
 
-  console.log(patients)
+  const genderOptions = [
+    {label: 'Male',value: 'male'},
+    {label: 'Female',value: 'female'}
+  ]
 
   return (
     <div className="Home">
@@ -149,6 +157,13 @@ const Home = () => {
           onChange={(ev) => handleSearchInput(ev.target.value)}
           onClear={() => handleSearchInput('')}
           />
+          <div style={{width: '150px'}}>
+            <Dropdown
+              options={genderOptions}
+              placeholder={'Gender'}
+              onChange={handleGenderInput}
+            />
+          </div>
         <Button appearance="primary" onClick={() => handleSearch()}>Search</Button>
       </div>
       {patients && patients.entry && patients.entry.length > 0 && (
