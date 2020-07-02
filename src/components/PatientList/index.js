@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Avatar, Heading, Badge, Subheading } from '@innovaccer/design-system';
 import './PatientList.css';
+import Info from '../Info';
 
 const PatientList = (props) => {
   const { data = {}, onClick } = props;
@@ -8,7 +9,7 @@ const PatientList = (props) => {
   const getPatientCard = (patients = []) => {
     return patients.map((item, index) => {
       return (
-        <div className="PatientList-itemWrapper" key={index} onClick={ev => onClick(ev, item.resource.id)}>
+        <div className="PatientList-itemWrapper" key={index} onClick={(ev) => onClick(ev, item.resource.id)}>
           <div className="PatientList-item-heading">
             <Avatar appearance="primary">
               {`${item.resource.name[0].given[0].charAt(0)}${item.resource.name[0].family.charAt(0)}`}
@@ -17,19 +18,19 @@ const PatientList = (props) => {
             <Badge appearance="secondary">{item.resource.id}</Badge>
           </div>
           <div className="PatientList-item-info">
-          <Subheading appearance="default">DOB: </Subheading>
-          <Subheading appearance="subtle">{item.resource.birthDate}</Subheading>
-          <Subheading appearance="default">Gender: </Subheading>
-          <Subheading appearance="subtle">{item.resource.gender}</Subheading>
+            <Subheading appearance="default">DOB: </Subheading>
+            <Subheading appearance="subtle">{item.resource.birthDate}</Subheading>
+            <Subheading appearance="default">Gender: </Subheading>
+            <Subheading appearance="subtle">{item.resource.gender}</Subheading>
           </div>
         </div>
-      )
-    })
-  }
+      );
+    });
+  };
 
   return (
     <div className="PatientList">
-      {getPatientCard(data.entry)}
+      {data.entry && data.entry.length === 0 ? <Info text="No data found" icon="error" /> : getPatientCard(data.entry)}
     </div>
   );
 };
