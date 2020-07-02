@@ -51,7 +51,7 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          const filtered = data.data.entry.map((e) => e.resource);
+          const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
           setObservationData(filtered);
         })
         .catch((err) => {
@@ -64,7 +64,7 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          const filtered = data.data.entry.map((e) => e.resource);
+          const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
           setEncounterData(filtered);
         })
         .catch((err) => {
@@ -93,19 +93,21 @@ const Summary = () => {
   ) : (
     <div className="Summary">
       <PageHeader {...pageheaderOptions} />
-      <div className="Summary-body">{patientData && <PatientInfo data={patientData} />}</div>
-      {observationData && (
-        <div className="Summary-table">
-          <Subheading>Observations</Subheading>
-          <ObservationTable data={observationData} />
-        </div>
-      )}
-      {encounterData && (
-        <div className="Summary-table">
-          <Subheading>Encounters</Subheading>
-          <Encounter data={encounterData} />
-        </div>
-      )}
+      <div className="Summary-body">
+        {patientData && <PatientInfo data={patientData} />}
+        {observationData && (
+          <div className="Summary-table">
+            <Subheading>Observations</Subheading>
+            <ObservationTable data={observationData} />
+          </div>
+        )}
+        {encounterData && (
+          <div className="Summary-table">
+            <Subheading>Encounters</Subheading>
+            <Encounter data={encounterData} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
