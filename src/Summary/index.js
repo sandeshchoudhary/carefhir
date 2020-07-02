@@ -7,6 +7,7 @@ import PatientInfo from '../components/PatientInfo';
 import ObservationTable from '../components/ObservationTable';
 import Encounter from '../components/Encounter';
 import Info from '../components/Info';
+import { render } from '@testing-library/react';
 
 const Summary = () => {
   let history = useHistory();
@@ -28,11 +29,17 @@ const Summary = () => {
   const [observationData, setObservationData] = useState(null);
   const [encounterData, setEncounterData] = useState(null);
   const [error, setError] = useState(false);
+  const [loadingEncounter, setLoadingEncounter] = useState(true);
+  const [loadingObservation, setLoadingObservation] = useState(true);
+  const [loadingPatient, setLoadingPatient] = useState(true);
 
   console.log(patientId);
   useEffect(() => {
     setServer(getServer());
     setHeaders(getHeaders());
+    //setLoadingEncounter(true);
+    //setLoadingObservation(true);
+    //setLoadingPatient(true);
     if (getServer()) {
       getPatientData(
         fhirServer,
@@ -40,6 +47,7 @@ const Summary = () => {
       )(patientId)
         .then((data) => {
           setPatientData(data.data);
+          setLoadingPatient(false);
         })
         .catch((err) => {
           console.log(err);
@@ -53,6 +61,7 @@ const Summary = () => {
         .then((data) => {
           const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
           setObservationData(filtered);
+          setLoadingObservation(false);
         })
         .catch((err) => {
           console.log(err);
@@ -66,6 +75,7 @@ const Summary = () => {
         .then((data) => {
           const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
           setEncounterData(filtered);
+          setLoadingEncounter(false);
         })
         .catch((err) => {
           console.log(err);
@@ -88,25 +98,67 @@ const Summary = () => {
     breadcrumb: <Breadcrumbs list={breadcrumbData} onClick={(link) => history.push(link)} />
   };
 
+  const renderEncounter = () => {
+    if (loadingEncounter) {
+      return (
+        <div className="Summary-table">
+          <Subheading>Encounters</Subheading>
+          <Encounter loading={loadingEncounter} />
+        </div>
+      );
+    } else {
+      return (
+        encounterData && (
+          <div className="Summary-table">
+            <Subheading>Encounters</Subheading>
+            <Encounter data={encounterData} />
+          </div>
+        )
+      );
+    }
+  };
+
+  const renderObservations = () => {
+    if (loadingObservation) {
+      return (
+        <div className="Summary-table">
+          <Subheading>Observations</Subheading>
+          <ObservationTable loading={loadingObservation} />
+        </div>
+      );
+    } else {
+      return (
+        encounterData && (
+          <div className="Summary-table">
+            <Subheading>Observations</Subheading>
+            <ObservationTable data={observationData} />
+          </div>
+        )
+      );
+    }
+  };
+
+  const renderPatientInfo = () => {
+    if (loadingPatient) {
+      return (
+        <div className="Summary-table">
+          <PatientInfo loading={loadingPatient} />
+        </div>
+      );
+    } else {
+      return patientData && <PatientInfo data={patientData} />;
+    }
+  };
+
   return error ? (
     <Info text="Something went wrong" icon="error" />
   ) : (
     <div className="Summary">
       <PageHeader {...pageheaderOptions} />
       <div className="Summary-body">
-        {patientData && <PatientInfo data={patientData} />}
-        {observationData && (
-          <div className="Summary-table">
-            <Subheading>Observations</Subheading>
-            <ObservationTable data={observationData} />
-          </div>
-        )}
-        {encounterData && (
-          <div className="Summary-table">
-            <Subheading>Encounters</Subheading>
-            <Encounter data={encounterData} />
-          </div>
-        )}
+        {renderPatientInfo()}
+        {!loadingPatient && renderObservations()}
+        {!loadingPatient && renderEncounter()}
       </div>
     </div>
   );

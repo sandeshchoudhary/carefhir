@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Heading, Badge, Card, Row, Column, Subheading } from '@innovaccer/design-system';
+import { Avatar, Heading, Badge, Card, Row, Column, Subheading, Spinner } from '@innovaccer/design-system';
 import './PatientInfo.css';
 
 const columnOptions = {
@@ -9,14 +9,22 @@ const columnOptions = {
 };
 
 const PatientInfo = (props) => {
-  const { data = {} } = props;
+  const { data = {}, loading = false } = props;
 
-  return (
+  const loadingState = () => (
+    <div className="PatientInfo-loading">
+      <Spinner size="large" />
+    </div>
+  );
+
+  return loading ? (
+    loadingState()
+  ) : (
     <Card
       shadow="dark"
       style={{
         width: '600px',
-        padding: '16px',
+        padding: '16px 16px',
         backgroundColor: 'white'
       }}
     >

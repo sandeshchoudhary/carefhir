@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { schema } from './helpers';
-import { Table } from '@innovaccer/design-system';
+import { Table, Spinner } from '@innovaccer/design-system';
 import Info from '../Info';
+import './Encounter.css';
 
 const Encounter = (props) => {
-  const { data = [] } = props;
+  const { data = [], loading = false } = props;
 
   // const serverAddress = 'https://r4.smarthealthit.org';
 
@@ -74,7 +75,15 @@ const Encounter = (props) => {
   // console.log('data', data);
   const filteredData = data.map((res) => getValObj(res));
 
-  return filteredData.length === 0 ? (
+  const loadingState = () => (
+    <div className="Encounter-loading">
+      <Spinner size="large" />
+    </div>
+  );
+
+  return loading ? (
+    <div>{loadingState()}</div>
+  ) : filteredData.length === 0 ? (
     <Info text="No data found" icon="error" />
   ) : (
     <Table data={filteredData} schema={schema} withPagination pageSize="9" showMenu />

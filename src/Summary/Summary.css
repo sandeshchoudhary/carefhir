@@ -16,3 +16,7 @@
   height: 300px;
   margin-bottom: 50px;
 }
+
+body {
+  background-color: var(--secondary-lightest);
+}

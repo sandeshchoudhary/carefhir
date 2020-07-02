@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Table } from '@innovaccer/design-system';
+import { Table, Spinner } from '@innovaccer/design-system';
 import { condition, getIssuedDate, getValue, getInterpretation, getComponentVals, schema } from './helpers';
 import Info from '../Info';
+import './ObservationTable.css';
 
 const ObservationTable = (props) => {
-  const { data = [] } = props;
+  const { data = [], loading = false } = props;
 
   const getInterpObj = (interpretation) => {
     if (interpretation.toLowerCase().includes('normal') && interpretation.length > 0) {
@@ -52,7 +53,15 @@ const ObservationTable = (props) => {
   const filteredData = filterData(data);
   // const filteredData = [];
 
-  return filteredData.length === 0 ? (
+  const loadingState = () => (
+    <div className="ObservationTable-loading">
+      <Spinner size="large" />
+    </div>
+  );
+
+  return loading ? (
+    <div>{loadingState()}</div>
+  ) : filteredData.length === 0 ? (
     <Info text="No data found" icon="error" />
   ) : (
     <Table data={filteredData} schema={schema} withPagination pageSize="9" showMenu />
