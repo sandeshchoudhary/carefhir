@@ -38,6 +38,7 @@ const Home = () => {
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(false);
   const [errText, setErrText] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const onModalClose = () => {
     if (getServer()) {
@@ -83,6 +84,7 @@ const Home = () => {
     localStorage.setItem('serverHeaders', serverHeaders);
     setModalState(false);
     setPatients([]);
+    setLoading(true);
   };
 
   useEffect(() => {
@@ -94,6 +96,7 @@ const Home = () => {
         JSON.parse(serverHeaders)
       )({ name: searchQuery, gender: searchGender })
         .then((data) => {
+          setLoading(false);
           setPatients(data.data);
         })
         .catch((err) => {
@@ -113,11 +116,13 @@ const Home = () => {
   };
 
   const handleSearch = () => {
+    setLoading(true);
     getPatients(
       fhirServer,
       JSON.parse(serverHeaders)
     )({ name: searchQuery, gender: searchGender })
       .then((data) => {
+        setLoading(false);
         setPatients(data.data);
       })
       .catch((err) => {
@@ -139,14 +144,18 @@ const Home = () => {
   const renderPatientList = () => {
     if (error) {
       return <Info text={errText} icon="error" />;
+    } else if (loading) {
+      return (
+        <div>
+          <PatientList loading={loading} />
+        </div>
+      );
     } else {
-      if (patients && patients.entry && patients.entry.length > 0) {
-        return (
-          <div style={{ height: 'calc(100vh - 112px', overflowY: 'scroll' }}>
-            <PatientList data={patients} onClick={drillToPatientInfo} />
-          </div>
-        );
-      }
+      return (
+        <div style={{ height: 'calc(100vh - 112px', overflowY: 'scroll' }}>
+          <PatientList data={patients} onClick={drillToPatientInfo} />
+        </div>
+      );
     }
   };
 

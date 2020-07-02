@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Avatar, Heading, Badge, Subheading } from '@innovaccer/design-system';
+import { Avatar, Heading, Badge, Subheading, Spinner } from '@innovaccer/design-system';
 import './PatientList.css';
 import Info from '../Info';
 
 const PatientList = (props) => {
-  const { data = {}, onClick } = props;
+  const { data = {}, onClick, loading = false } = props;
 
   const getPatientCard = (patients = []) => {
     return patients.map((item, index) => {
@@ -28,9 +28,21 @@ const PatientList = (props) => {
     });
   };
 
-  return (
+  const loadingState = () => (
+    <div className="PatientList-loader">
+      <Spinner size="large" />
+    </div>
+  );
+
+  return loading ? (
+    <div className="PatientList">{loadingState()}</div>
+  ) : (
     <div className="PatientList">
-      {data.entry && data.entry.length === 0 ? <Info text="No data found" icon="error" /> : getPatientCard(data.entry)}
+      {!('entry' in data) || (data.entry && data.entry.length === 0) ? (
+        <Info text="No data found" icon="error" />
+      ) : (
+        getPatientCard(data.entry)
+      )}
     </div>
   );
 };
