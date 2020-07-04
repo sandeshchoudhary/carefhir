@@ -1,19 +1,25 @@
 export const schema = [
   {
-    name: 'orgRef',
+    name: 'facility',
     displayName: 'Facility Name',
     width: 150,
     resizable: true
   },
   {
-    name: 'locationType',
+    name: 'lType',
     displayName: 'Location Type',
     width: 150,
     resizable: true
   },
   {
-    name: 'providerRef',
+    name: 'provider',
     displayName: 'Provider',
+    width: 150,
+    resizable: true
+  },
+  {
+    name: 'facilityTel',
+    displayName: 'Facility contact',
     width: 150,
     resizable: true
   },

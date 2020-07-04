@@ -103,7 +103,7 @@ const Summary = () => {
       {encounterData && (
         <div className="Summary-table">
           <Subheading>Encounters</Subheading>
-          <Encounter data={encounterData} />
+          <Encounter fhirServer={fhirServer} serverHeaders={JSON.parse(serverHeaders)} data={encounterData} />
         </div>
       )}
     </div>
