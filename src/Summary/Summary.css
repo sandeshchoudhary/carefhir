@@ -16,4 +16,14 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 50px;
+  margin-top: 10px;
+}
+
+.Summary-table-heading {
+  display: flex;
+  background-color: var(--secondary);
+}
+
+.Summary-table-heading .Subheading {
+  margin-left: 10px;
 }

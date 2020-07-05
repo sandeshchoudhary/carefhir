@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageHeader, Breadcrumbs, Card, Subheading } from '@innovaccer/design-system';
+import { PageHeader, Breadcrumbs, Card, Icon, Subheading } from '@innovaccer/design-system';
 import { useHistory, useParams } from 'react-router-dom';
 import './Summary.css';
 import { getPatientData, getVitalsData, getEncounterData, getConditionData, getImmunizationData } from '../api';
@@ -125,25 +125,37 @@ const Summary = () => {
       <div className="Summary-body">{patientData && <PatientInfo data={patientData} />}</div>
       {vitalsData && (
         <div className="Summary-table">
-          <Subheading>Vitals</Subheading>
+          <div className="Summary-table-heading">
+            <Icon size="23" name="add_box" />
+            <Subheading>Vitals</Subheading>
+          </div>
           <Vitals data={vitalsData} />
         </div>
       )}
       {encounterData && (
         <div className="Summary-table">
-          <Subheading>Encounters</Subheading>
+          <div className="Summary-table-heading">
+            <Icon size="23" name="emoji_people" />
+            <Subheading>Encounters</Subheading>
+          </div>
           <Encounter fhirServer={fhirServer} serverHeaders={JSON.parse(serverHeaders)} data={encounterData} />
         </div>
       )}
       {conditionData && (
         <div className="Summary-table">
-          <Subheading>Condition</Subheading>
+          <div className="Summary-table-heading">
+            <Icon size="23" name="check_box" />
+            <Subheading>Condition</Subheading>
+          </div>
           <Condition data={conditionData} />
         </div>
       )}
       {immunizationData && (
         <div className="Summary-table">
-          <Subheading>Immunization</Subheading>
+          <div className="Summary-table-heading">
+            <Icon size="23" name="event_note" />
+            <Subheading>Immunization</Subheading>
+          </div>
           <Immunization data={immunizationData} />
         </div>
       )}
