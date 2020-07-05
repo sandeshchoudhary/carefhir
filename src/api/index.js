@@ -34,13 +34,25 @@ export const getPatientData = (serverAddress, serverHeaders = {}) => (id) => {
 };
 
 export const getObservationData = (serverAddress, serverHeaders = {}) => (id) => {
-  return axios.get(`${serverAddress}/Observation?subject=Patient/${id}`, {
+  return axios.get(`${serverAddress}/Observation?patient=${id}`, {
     headers: serverHeaders
   });
 };
 
 export const getEncounterData = (serverAddress, serverHeaders = {}) => (id) => {
-  return axios.get(`${serverAddress}/Encounter?subject=Patient/${id}`, {
+  return axios.get(`${serverAddress}/Encounter?patient=${id}`, {
+    headers: serverHeaders
+  });
+};
+
+export const getConditionData = (serverAddress, serverHeaders = {}) => (id) => {
+  return axios.get(`${serverAddress}/Condition?patient=${id}`, {
+    headers: serverHeaders
+  });
+};
+
+export const getImmunizationData = (serverAddress, serverHeaders = {}) => (id) => {
+  return axios.get(`${serverAddress}/Immunization?patient=${id}`, {
     headers: serverHeaders
   });
 };
