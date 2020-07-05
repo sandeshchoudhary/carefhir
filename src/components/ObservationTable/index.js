@@ -55,7 +55,7 @@ const ObservationTable = (props) => {
   return filteredData.length === 0 ? (
     <Info text="No data found" icon="error" />
   ) : (
-    <Table data={filteredData} schema={schema} withPagination pageSize="9" showMenu />
+    <Table data={filteredData} schema={schema} />
   );
 };
 

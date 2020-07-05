@@ -7,7 +7,7 @@ export const schema = [
   },
   {
     name: 'lType',
-    displayName: 'Location Type',
+    displayName: 'Encounter Type',
     width: 150,
     resizable: true
   },

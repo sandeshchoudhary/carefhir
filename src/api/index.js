@@ -39,6 +39,15 @@ export const getObservationData = (serverAddress, serverHeaders = {}) => (id) =>
   });
 };
 
+export const getVitalsData = (serverAddress, serverHeaders = {}) => (id) => {
+  // to get only some vitals use loinc codes
+  // use [base]/Observation?patient=patient_id&code=loinc_code1,loinc_code2
+
+  return axios.get(`${serverAddress}/Observation?patient=${id}&category=vital-signs`, {
+    headers: serverHeaders
+  });
+};
+
 export const getEncounterData = (serverAddress, serverHeaders = {}) => (id) => {
   return axios.get(`${serverAddress}/Encounter?patient=${id}`, {
     headers: serverHeaders

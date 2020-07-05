@@ -39,7 +39,7 @@ const Encounter = (props) => {
       const sDate = resource.period ? resource.period.start : '-';
       const dateStr = sDate === '-' ? '-' : new Date(sDate);
       const startDate =
-        dateStr === '-' ? '-' : `${dateStr.getMonth() + 1}-${dateStr.getDay()}-${dateStr.getFullYear()}`;
+        dateStr === '-' ? '-' : `${dateStr.getMonth() + 1}-${dateStr.getDate()}-${dateStr.getFullYear()}`;
 
       const pIdx = pRef.indexOf(providerRef);
       const oIdx = oRef.indexOf(orgRef);

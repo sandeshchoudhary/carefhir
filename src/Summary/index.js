@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { PageHeader, Breadcrumbs, Card, Subheading } from '@innovaccer/design-system';
 import { useHistory, useParams } from 'react-router-dom';
 import './Summary.css';
-import { getPatientData, getObservationData, getEncounterData, getConditionData, getImmunizationData } from '../api';
+import { getPatientData, getVitalsData, getEncounterData, getConditionData, getImmunizationData } from '../api';
 import PatientInfo from '../components/PatientInfo';
-import ObservationTable from '../components/ObservationTable';
+import Vitals from '../components/Vitals';
 import Encounter from '../components/Encounter';
 import Condition from '../components/Condition';
 import Immunization from '../components/Immunization';
@@ -27,13 +27,12 @@ const Summary = () => {
   const [fhirServer, setServer] = useState(getServer());
   const [serverHeaders, setHeaders] = useState(getHeaders());
   const [patientData, setPatientData] = useState(null);
-  const [observationData, setObservationData] = useState(null);
+  const [vitalsData, setVitalsData] = useState(null);
   const [encounterData, setEncounterData] = useState(null);
   const [conditionData, setConditionData] = useState(null);
   const [immunizationData, setImmunizationData] = useState(null);
   const [error, setError] = useState(false);
 
-  console.log(patientId);
   useEffect(() => {
     setServer(getServer());
     setHeaders(getHeaders());
@@ -50,13 +49,13 @@ const Summary = () => {
           setError(true);
         });
 
-      getObservationData(
+      getVitalsData(
         fhirServer,
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
           const filtered = data.data.entry.map((e) => e.resource);
-          setObservationData(filtered);
+          setVitalsData(filtered);
         })
         .catch((err) => {
           console.log(err);
@@ -124,10 +123,10 @@ const Summary = () => {
     <div className="Summary">
       <PageHeader {...pageheaderOptions} />
       <div className="Summary-body">{patientData && <PatientInfo data={patientData} />}</div>
-      {observationData && (
+      {vitalsData && (
         <div className="Summary-table">
-          <Subheading>Observations</Subheading>
-          <ObservationTable data={observationData} />
+          <Subheading>Vitals</Subheading>
+          <Vitals data={vitalsData} />
         </div>
       )}
       {encounterData && (

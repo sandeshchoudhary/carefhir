@@ -5,7 +5,6 @@ import Info from '../Info';
 
 const Immunization = (props) => {
   const { data = [] } = props;
-  console.log(data);
   const [immuneData, setImmuneData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,7 +14,8 @@ const Immunization = (props) => {
 
     for (let idx = 0; idx < data.length; idx++) {
       const resource = data[idx];
-      const occurenceDate = resource.occurrenceDateTime ? resource.occurrenceDateTime : '-';
+      const oDate = resource.occurrenceDateTime ? new Date(resource.occurrenceDateTime) : '-';
+      const occurenceDate = oDate === '-' ? '-' : `${oDate.getMonth() + 1}-${oDate.getDate()}-${oDate.getFullYear()}`;
       const vaccine =
         resource.vaccineCode && resource.vaccineCode.coding[0] && resource.vaccineCode.coding[0].display
           ? resource.vaccineCode.coding[0].display

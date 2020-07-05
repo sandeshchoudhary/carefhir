@@ -5,7 +5,6 @@ import Info from '../Info';
 
 const Condition = (props) => {
   const { data = [] } = props;
-  console.log(data);
   const [conData, setConData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +28,8 @@ const Condition = (props) => {
         resource.code && resource.code.coding[0] && resource.code.coding[0].display
           ? resource.code.coding[0].display
           : '-';
-      const recordedDate = resource.recordedDate ? resource.recordedDate : '-';
+      const rDate = resource.recordedDate ? new Date(resource.recordedDate) : '-';
+      const recordedDate = rDate === '-' ? '-' : `${rDate.getMonth() + 1}-${rDate.getDate()}-${rDate.getFullYear()}`;
 
       const dataObj = {
         codeText,
