@@ -26,7 +26,10 @@ const Encounter = (props) => {
     for (let idx = 0; idx < data.length; idx++) {
       const resource = data[idx];
       const participant = resource.participant && resource.participant.length > 0 ? resource.participant[0] : '-';
-      const providerRef = participant && participant.individual ? participant.individual.reference : '';
+      const providerRef =
+        participant && participant.individual && participant.individual.reference
+          ? participant.individual.reference
+          : '';
       const orgRef =
         resource.serviceProvider && resource.serviceProvider.reference ? resource.serviceProvider.reference : '';
 
@@ -36,7 +39,7 @@ const Encounter = (props) => {
       // get value for location type, startData
       const rType = resource.type && resource.type.length > 0 ? resource.type[0] : '-';
       const lType = rType && rType.text ? rType.text : '-';
-      const sDate = resource.period ? resource.period.start : '-';
+      const sDate = resource.period && resource.period.start ? resource.period.start : '-';
       const dateStr = sDate === '-' ? '-' : new Date(sDate);
       const startDate =
         dateStr === '-' ? '-' : `${dateStr.getMonth() + 1}-${dateStr.getDate()}-${dateStr.getFullYear()}`;
@@ -46,7 +49,19 @@ const Encounter = (props) => {
 
       if (providerRef !== '' && pIdx === -1) {
         const providerData = await getRefResource(baseAddress, headers, providerRef);
-        const pName = `${providerData.data.name[0].given[0]}, ${providerData.data.name[0].family}`;
+        const firstName =
+          providerData.data.name &&
+          providerData.data.name[0] &&
+          providerData.data.name[0].given &&
+          providerData.data.name[0].given[0]
+            ? providerData.data.name[0].given[0]
+            : ' ';
+        const lastName =
+          providerData.data.name && providerData.data.name[0] && providerData.data.name[0].family
+            ? providerData.data.name[0].family
+            : ' ';
+
+        const pName = `${firstName}, ${lastName}`;
         // two pushes making sure we get value at pIdx + 1
         pRef.push(providerRef);
         pRef.push(pName);
@@ -56,8 +71,11 @@ const Encounter = (props) => {
 
       if (orgRef !== '' && oIdx === -1) {
         const orgData = await getRefResource(baseAddress, headers, orgRef);
-        const oName = orgData.data.name;
-        const oTelecom = orgData.data.telecom[0].value;
+        const oName = orgData.data.name ? orgData.data.name : '-';
+        const oTelecom =
+          orgData.data.telecom && orgData.data.telecom[0] && orgData.data.telecom[0].value
+            ? orgData.data.telecom[0].value
+            : '-';
         // two pushes ensuring we get values at oIdx + 1
         oRef.push(orgRef);
         oRef.push([oName, oTelecom]);
@@ -69,8 +87,8 @@ const Encounter = (props) => {
         lType,
         provider,
         startDate,
-        facility: facility[0] ? facility[0] : '-',
-        facilityTel: facility[1] ? facility[1] : '-'
+        facility: facility[0],
+        facilityTel: facility[1]
       };
 
       encData.push(dataObj);

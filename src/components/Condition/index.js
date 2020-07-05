@@ -16,16 +16,20 @@ const Condition = (props) => {
       const resource = data[idx];
       const verificationStatus =
         resource.verificationStatus &&
+        resource.verificationStatus.coding &&
         resource.verificationStatus.coding[0] &&
         resource.verificationStatus.coding[0].code
           ? resource.verificationStatus.coding[0].code
           : '-';
       const severity =
-        resource.severity && resource.severity.coding[0] && resource.severity.coding[0].display
+        resource.severity &&
+        resource.severity.coding &&
+        resource.severity.coding[0] &&
+        resource.severity.coding[0].display
           ? resource.severity.coding[0].display
           : '-';
       const codeText =
-        resource.code && resource.code.coding[0] && resource.code.coding[0].display
+        resource.code && resource.code.coding && resource.code.coding[0] && resource.code.coding[0].display
           ? resource.code.coding[0].display
           : '-';
       const rDate = resource.recordedDate ? new Date(resource.recordedDate) : '-';
