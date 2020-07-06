@@ -4,9 +4,9 @@ import { Table } from '@innovaccer/design-system';
 import Info from '../Info';
 
 const Condition = (props) => {
-  const { data = [] } = props;
+  const { data = [], loading } = props;
   const [conData, setConData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [condnLoading, setCondnLoading] = useState(true);
 
   // filter required data
   const filterData = (data) => {
@@ -50,16 +50,15 @@ const Condition = (props) => {
 
   // const tableData = () => {
   useEffect(() => {
-    setLoading(true);
     filterData(data)
       .then((res) => {
         setConData(res);
-        setLoading(false);
+        setCondnLoading(false);
       })
       .catch((err) => alert(err));
-  }, []);
+  }, [props]);
 
-  return <Table data={conData} loading={loading} schema={schema} />;
+  return <Table data={conData} loading={loading || condnLoading} schema={schema} />;
 };
 
 export default Condition;

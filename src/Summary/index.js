@@ -26,16 +26,28 @@ const Summary = () => {
 
   const [fhirServer, setServer] = useState(getServer());
   const [serverHeaders, setHeaders] = useState(getHeaders());
+
+  // state for data
   const [patientData, setPatientData] = useState(null);
-  const [vitalsData, setVitalsData] = useState(null);
-  const [encounterData, setEncounterData] = useState(null);
-  const [conditionData, setConditionData] = useState(null);
-  const [immunizationData, setImmunizationData] = useState(null);
+  const [vitalsData, setVitalsData] = useState([]);
+  const [encounterData, setEncounterData] = useState([]);
+  const [conditionData, setConditionData] = useState([]);
+  const [immunizationData, setImmunizationData] = useState([]);
+
+  // state for error
   const [error, setError] = useState(false);
+
+  // state for loading
+  const [patientLoading, setPatientLoading] = useState(true);
+  const [vitalsLoading, setVitalsLoading] = useState(true);
+  const [encounterLoading, setEncounterLoading] = useState(true);
+  const [conditionLoading, setConditionLoading] = useState(true);
+  const [immuneLoading, setImmuneLoading] = useState(true);
 
   useEffect(() => {
     setServer(getServer());
     setHeaders(getHeaders());
+
     if (getServer()) {
       getPatientData(
         fhirServer,
@@ -43,6 +55,7 @@ const Summary = () => {
       )(patientId)
         .then((data) => {
           setPatientData(data.data);
+          setPatientLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -56,6 +69,7 @@ const Summary = () => {
         .then((data) => {
           const filtered = data.data.entry.map((e) => e.resource);
           setVitalsData(filtered);
+          setVitalsLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -69,6 +83,7 @@ const Summary = () => {
         .then((data) => {
           const filtered = data.data.entry.map((e) => e.resource);
           setEncounterData(filtered);
+          setEncounterLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -82,6 +97,7 @@ const Summary = () => {
         .then((data) => {
           const filtered = data.data.entry.map((e) => e.resource);
           setConditionData(filtered);
+          setConditionLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -95,6 +111,7 @@ const Summary = () => {
         .then((data) => {
           const filtered = data.data.entry.map((e) => e.resource);
           setImmunizationData(filtered);
+          setImmuneLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -122,43 +139,42 @@ const Summary = () => {
   ) : (
     <div className="Summary">
       <PageHeader {...pageheaderOptions} />
-      <div className="Summary-body">{patientData && <PatientInfo data={patientData} />}</div>
-      {vitalsData && (
-        <div className="Summary-table">
-          <div className="Summary-table-heading">
-            <Icon size="23" name="add_box" />
-            <Subheading>Vitals</Subheading>
-          </div>
-          <Vitals data={vitalsData} />
+      <div className="Summary-body">
+        <PatientInfo data={patientData} loading={patientLoading} />
+      </div>
+      <div className="Summary-table">
+        <div className="Summary-table-heading">
+          <Icon size="23" name="add_box" />
+          <Subheading>Vitals</Subheading>
         </div>
-      )}
-      {encounterData && (
-        <div className="Summary-table">
-          <div className="Summary-table-heading">
-            <Icon size="23" name="emoji_people" />
-            <Subheading>Encounters</Subheading>
-          </div>
-          <Encounter fhirServer={fhirServer} serverHeaders={JSON.parse(serverHeaders)} data={encounterData} />
+        <Vitals data={vitalsData} loading={vitalsLoading} />
+      </div>
+      <div className="Summary-table">
+        <div className="Summary-table-heading">
+          <Icon size="23" name="emoji_people" />
+          <Subheading>Encounters</Subheading>
         </div>
-      )}
-      {conditionData && (
-        <div className="Summary-table">
-          <div className="Summary-table-heading">
-            <Icon size="23" name="check_box" />
-            <Subheading>Condition</Subheading>
-          </div>
-          <Condition data={conditionData} />
+        <Encounter
+          fhirServer={fhirServer}
+          serverHeaders={JSON.parse(serverHeaders)}
+          data={encounterData}
+          loading={encounterLoading}
+        />
+      </div>
+      <div className="Summary-table">
+        <div className="Summary-table-heading">
+          <Icon size="23" name="check_box" />
+          <Subheading>Condition</Subheading>
         </div>
-      )}
-      {immunizationData && (
-        <div className="Summary-table">
-          <div className="Summary-table-heading">
-            <Icon size="23" name="event_note" />
-            <Subheading>Immunization</Subheading>
-          </div>
-          <Immunization data={immunizationData} />
+        <Condition data={conditionData} loading={conditionLoading} />
+      </div>
+      <div className="Summary-table">
+        <div className="Summary-table-heading">
+          <Icon size="23" name="event_note" />
+          <Subheading>Immunization</Subheading>
         </div>
-      )}
+        <Immunization data={immunizationData} loading={immuneLoading} />
+      </div>
     </div>
   );
 };

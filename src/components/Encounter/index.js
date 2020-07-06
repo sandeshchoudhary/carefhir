@@ -5,10 +5,10 @@ import { Table } from '@innovaccer/design-system';
 import Info from '../Info';
 
 const Encounter = (props) => {
-  const { data = [], fhirServer, serverHeaders } = props;
+  const { data = [], fhirServer, serverHeaders, loading } = props;
 
   const [encData, setEncData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [encLoading, setEncLoading] = useState(true);
 
   // send api request
   const getRefResource = (baseAddress, headers, ref) => {
@@ -99,16 +99,15 @@ const Encounter = (props) => {
 
   // const tableData = () => {
   useEffect(() => {
-    setLoading(true);
     filterData(fhirServer, serverHeaders, data)
       .then((res) => {
         setEncData(res);
-        setLoading(false);
+        setEncLoading(false);
       })
       .catch((err) => alert(err));
-  }, []);
+  }, [props]);
 
-  return <Table data={encData} loading={loading} schema={schema} />;
+  return <Table data={encData} loading={loading || encLoading} schema={schema} />;
 };
 
 //   return filteredData.length === 0 ? (

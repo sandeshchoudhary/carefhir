@@ -4,9 +4,9 @@ import { Table } from '@innovaccer/design-system';
 import Info from '../Info';
 
 const Immunization = (props) => {
-  const { data = [] } = props;
+  const { data = [], loading } = props;
   const [immuneData, setImmuneData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [immuneLoading, setImmuneLoading] = useState(true);
 
   // filter required data
   const filterData = (data) => {
@@ -36,16 +36,15 @@ const Immunization = (props) => {
 
   //   // const tableData = () => {
   useEffect(() => {
-    setLoading(true);
     filterData(data)
       .then((res) => {
         setImmuneData(res);
-        setLoading(false);
+        setImmuneLoading(false);
       })
       .catch((err) => alert(err));
-  }, []);
+  }, [props]);
 
-  return <Table data={immuneData} loading={loading} schema={schema} />;
+  return <Table data={immuneData} loading={loading || immuneLoading} schema={schema} />;
 };
 
 export default Immunization;

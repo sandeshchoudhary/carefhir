@@ -11,9 +11,9 @@ const Vitals = (props) => {
   // 55284-4 => B.P. => handles both systolic (8480-6) and diastolic (8462-4)
   // by default shows these four
 
-  const { data = [], loinc = ['29463-7', '8302-2', '39156-5', '55284-4', '85354-9'] } = props;
+  const { data = [], loading, loinc = ['29463-7', '8302-2', '39156-5', '55284-4', '85354-9'] } = props;
   const [vitalData, setVitalData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [vitalsLoading, setVitalsLoading] = useState(true);
 
   const filterData = (dataArr) => {
     const filteredData = [];
@@ -72,15 +72,14 @@ const Vitals = (props) => {
   };
 
   useEffect(() => {
-    setLoading(true);
     filterData(data).then((vData) => {
       setVitalData(vData);
-      setLoading(false);
+      setVitalsLoading(false);
     });
-  }, []);
+  }, [props]);
 
   // return <h1>HI</h1>;
-  return <Table data={vitalData} schema={schema} loading={loading} />;
+  return <Table data={vitalData} schema={schema} loading={loading || vitalsLoading} />;
 };
 
 export default Vitals;
