@@ -6,7 +6,6 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './Home';
 import Summary from './Summary';
 
-
 ReactDOM.render(
   <React.StrictMode>
     <Router basename={process.env.PUBLIC_URL}>

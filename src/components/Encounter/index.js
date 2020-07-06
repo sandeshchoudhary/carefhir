@@ -99,13 +99,14 @@ const Encounter = (props) => {
 
   // const tableData = () => {
   useEffect(() => {
+    setEncLoading(true);
     filterData(fhirServer, serverHeaders, data)
       .then((res) => {
         setEncData(res);
         setEncLoading(false);
       })
       .catch((err) => alert(err));
-  }, [props]);
+  }, [data]);
 
   return <Table data={encData} loading={loading || encLoading} schema={schema} />;
 };

@@ -72,10 +72,12 @@ const Vitals = (props) => {
   };
 
   useEffect(() => {
-    filterData(data).then((vData) => {
-      setVitalData(vData);
-      setVitalsLoading(false);
-    });
+    filterData(data)
+      .then((vData) => {
+        setVitalData(vData);
+        setVitalsLoading(false);
+      })
+      .catch((err) => alert(err));
   }, [props]);
 
   // return <h1>HI</h1>;
