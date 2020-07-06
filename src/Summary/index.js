@@ -81,7 +81,7 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          const filtered = data.data.entry.map((e) => e.resource);
+          const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
           setEncounterData(filtered);
           setEncounterLoading(false);
         })
