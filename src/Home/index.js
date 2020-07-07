@@ -88,6 +88,7 @@ const Home = () => {
   useEffect(() => {
     setServer(getServer());
     setHeaders(getHeaders());
+    setError(false);
     if (getServer()) {
       getPatients(
         fhirServer,
