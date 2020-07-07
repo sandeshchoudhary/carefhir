@@ -1,5 +1,4 @@
 .PatientInfo {
-
 }
 
 .PatientInfo-heading {
@@ -24,4 +23,9 @@
 
 .PatientInfo-body {
   padding: 16px 10px;
+}
+
+.PatientInfo-loading {
+  margin: 15px;
+  padding-left: 15px;
 }

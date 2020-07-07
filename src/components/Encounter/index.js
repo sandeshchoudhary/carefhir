@@ -1,84 +1,121 @@
 import axios from 'axios';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { schema } from './helpers';
+import { schema } from './schema';
 import { Table } from '@innovaccer/design-system';
 import Info from '../Info';
 
 const Encounter = (props) => {
-  const { data = [] } = props;
+  const { data = [], fhirServer, serverHeaders, loading } = props;
 
-  // const serverAddress = 'https://r4.smarthealthit.org';
+  const [encData, setEncData] = useState([]);
+  const [encLoading, setEncLoading] = useState(true);
 
-  // const getReferences = async (serverAddress, serverHeaders = {}, link) => {
-  //   const ref = await axios.get(`${serverAddress}/${link}`, {
-  //     headers: serverHeaders
-  //   });
-
-  //   return ref;
-  // };
-
-  // const getRefValues = async (resource) => {
-  //   // const rType = resource.type && resource.type.length > 0 ? resource.type[0] : '-';
-  //   // const lType = rType && rType.text ? rType.text : '-';
-  //   // const startDate = resource.period ? resource.period.start : '-';
-  //   const participant = resource.participant && resource.participant.length > 0 ? resource.participant[0] : '-';
-  //   const providerRef = participant && participant.individual ? participant.individual.reference : '';
-  //   const orgRef = resource.serviceProvider ? resource.serviceProvider.reference : '';
-  //   let provider = '';
-  //   let facility = '';
-
-  //   if (providerRef !== '-') {
-  //     const pRef = await getReferences(serverAddress, {}, providerRef);
-  //     provider = pRef;
-  //   }
-
-  //   if (orgRef !== '-') {
-  //     const fRef = await getReferences(serverAddress, {}, orgRef);
-  //     facility = fRef;
-  //   }
-  //   // const facility = (await orgRef) !== '' ? getReferences(serverAddress, {}, orgRef) : '-';
-
-  //   const provName = provider === '-' ? '-' : `${provider.data.name[0].given[0]}, ${provider.data.name[0].family}`;
-  //   const orgName = facility === '-' ? '-' : facility.data.name;
-  //   const orgContact = facility === '-' ? '-' : facility.data.telecom;
-  //   const orgSys = Array.isArray(orgContact) ? orgContact[0].system : '-';
-  //   const orgTel = orgSys === 'phone' ? orgContact[0].value : '-';
-
-  //   // console.table([provName, orgName, orgTel]);
-  //   return [provName, orgName, orgTel];
-  // };
-
-  const getValObj = (resource) => {
-    const rType = resource.type && resource.type.length > 0 ? resource.type[0] : '-';
-    const lType = rType && rType.text ? rType.text : '-';
-    const sDate = resource.period ? resource.period.start : '-';
-    const dateStr = sDate === '-' ? '-' : new Date(sDate);
-    const startDate = dateStr === '-' ? '-' : `${dateStr.getMonth() + 1}-${dateStr.getDay()}-${dateStr.getFullYear()}`;
-    const participant = resource.participant && resource.participant.length > 0 ? resource.participant[0] : '-';
-    let providerRef = participant && participant.individual ? participant.individual.reference : '';
-    let orgRef = resource.serviceProvider ? resource.serviceProvider.reference : '';
-
-    providerRef = providerRef === '' ? '-' : providerRef.split('/')[1];
-    orgRef = orgRef === '' ? '-' : orgRef.split('/')[1];
-
-    // const [provider, facility, facilityTel] = await getRefValues(resource);
-
-    return {
-      startDate,
-      providerRef,
-      orgRef,
-      locationType: lType
-    };
+  // send api request
+  const getRefResource = (baseAddress, headers, ref) => {
+    return axios.get(`${baseAddress}/${ref}`, {
+      headers: headers
+    });
   };
 
-  // console.log('data', data);
-  const filteredData = data.map((res) => getValObj(res));
+  // filter required data and make api requests for provider, organization
+  const filterData = async (baseAddress, headers, data) => {
+    let pRef = [];
+    let oRef = [];
+    let encData = [];
 
-  return filteredData.length === 0 ? (
-    <Info text="No data found" icon="error" />
-  ) : (
-    <Table data={filteredData} schema={schema} withPagination pageSize="9" showMenu />
-  );
+    for (let idx = 0; idx < data.length; idx++) {
+      const resource = data[idx];
+      const participant = resource.participant && resource.participant.length > 0 ? resource.participant[0] : '-';
+      const providerRef =
+        participant && participant.individual && participant.individual.reference
+          ? participant.individual.reference
+          : '';
+      const orgRef =
+        resource.serviceProvider && resource.serviceProvider.reference ? resource.serviceProvider.reference : '';
+
+      let provider = '-';
+      let facility = '-';
+
+      // get value for location type, startData
+      const rType = resource.type && resource.type.length > 0 ? resource.type[0] : '-';
+      const lType = rType && rType.text ? rType.text : '-';
+      const sDate = resource.period && resource.period.start ? resource.period.start : '-';
+      const dateStr = sDate === '-' ? '-' : new Date(sDate);
+      const startDate =
+        dateStr === '-' ? '-' : `${dateStr.getMonth() + 1}-${dateStr.getDate()}-${dateStr.getFullYear()}`;
+
+      const pIdx = pRef.indexOf(providerRef);
+      const oIdx = oRef.indexOf(orgRef);
+
+      if (providerRef !== '' && pIdx === -1) {
+        const providerData = await getRefResource(baseAddress, headers, providerRef);
+        const firstName =
+          providerData.data.name &&
+          providerData.data.name[0] &&
+          providerData.data.name[0].given &&
+          providerData.data.name[0].given[0]
+            ? providerData.data.name[0].given[0]
+            : ' ';
+        const lastName =
+          providerData.data.name && providerData.data.name[0] && providerData.data.name[0].family
+            ? providerData.data.name[0].family
+            : ' ';
+
+        const pName = `${firstName}, ${lastName}`;
+        // two pushes making sure we get value at pIdx + 1
+        pRef.push(providerRef);
+        pRef.push(pName);
+      } else if (providerRef !== '' && pIdx !== -1) {
+        provider = pRef[pIdx + 1];
+      }
+
+      if (orgRef !== '' && oIdx === -1) {
+        const orgData = await getRefResource(baseAddress, headers, orgRef);
+        const oName = orgData.data.name ? orgData.data.name : '-';
+        const oTelecom =
+          orgData.data.telecom && orgData.data.telecom[0] && orgData.data.telecom[0].value
+            ? orgData.data.telecom[0].value
+            : '-';
+        // two pushes ensuring we get values at oIdx + 1
+        oRef.push(orgRef);
+        oRef.push([oName, oTelecom]);
+      } else if (orgRef !== '' && oIdx !== -1) {
+        facility = oRef[oIdx + 1];
+      }
+
+      const dataObj = {
+        lType,
+        provider,
+        startDate,
+        facility: facility[0],
+        facilityTel: facility[1]
+      };
+
+      encData.push(dataObj);
+    }
+
+    return encData;
+  };
+
+  // const tableData = () => {
+  useEffect(() => {
+    setEncLoading(true);
+    filterData(fhirServer, serverHeaders, data)
+      .then((res) => {
+        setEncData(res);
+        setEncLoading(false);
+      })
+      .catch((err) => alert(err));
+  }, [data]);
+
+  return <Table data={encData} loading={loading || encLoading} schema={schema} />;
 };
+
+//   return filteredData.length === 0 ? (
+//     <Info text="No data found" icon="error" />
+//   ) : (
+//     <Table data={filteredData} schema={schema} withPagination pageSize="9" showMenu />
+//   );
+// };
 
 export default Encounter;
