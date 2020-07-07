@@ -5,8 +5,6 @@ import Info from '../Info';
 
 const Immunization = (props) => {
   const { data = [], loading } = props;
-  const [immuneData, setImmuneData] = useState([]);
-  const [immuneLoading, setImmuneLoading] = useState(true);
 
   // filter required data
   const filterData = (data) => {
@@ -31,20 +29,13 @@ const Immunization = (props) => {
       immuneData.push(dataObj);
     }
 
-    return Promise.resolve(immuneData);
+    return immuneData;
   };
 
-  //   // const tableData = () => {
-  useEffect(() => {
-    filterData(data)
-      .then((res) => {
-        setImmuneData(res);
-        setImmuneLoading(false);
-      })
-      .catch((err) => alert(err));
-  }, [props]);
+  const immuneData = filterData(data);
+  const noData = !loading && immuneData.length === 0;
 
-  return <Table data={immuneData} loading={loading || immuneLoading} schema={schema} />;
+  return <Table data={immuneData} error={noData} loading={loading} schema={schema} />;
 };
 
 export default Immunization;

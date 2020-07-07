@@ -5,8 +5,6 @@ import Info from '../Info';
 
 const Condition = (props) => {
   const { data = [], loading } = props;
-  const [conData, setConData] = useState([]);
-  const [condnLoading, setCondnLoading] = useState(true);
 
   // filter required data
   const filterData = (data) => {
@@ -45,20 +43,13 @@ const Condition = (props) => {
       conData.push(dataObj);
     }
 
-    return Promise.resolve(conData);
+    return conData;
   };
 
-  // const tableData = () => {
-  useEffect(() => {
-    filterData(data)
-      .then((res) => {
-        setConData(res);
-        setCondnLoading(false);
-      })
-      .catch((err) => alert(err));
-  }, [props]);
+  const conData = filterData(data);
+  const noData = !loading && conData.length === 0;
 
-  return <Table data={conData} loading={loading || condnLoading} schema={schema} />;
+  return <Table data={conData} error={noData} loading={loading} schema={schema} />;
 };
 
 export default Condition;
