@@ -12,8 +12,6 @@ const Vitals = (props) => {
   // by default shows these four
 
   const { data = [], loading, loinc = ['29463-7', '8302-2', '39156-5', '55284-4', '85354-9'] } = props;
-  const [vitalData, setVitalData] = useState([]);
-  const [vitalsLoading, setVitalsLoading] = useState(true);
 
   const filterData = (dataArr) => {
     const filteredData = [];
@@ -68,20 +66,13 @@ const Vitals = (props) => {
       }
     });
 
-    return Promise.resolve(filteredData);
+    return filteredData;
   };
 
-  useEffect(() => {
-    filterData(data)
-      .then((vData) => {
-        setVitalData(vData);
-        setVitalsLoading(false);
-      })
-      .catch((err) => alert(err));
-  }, [props]);
+  const vitalData = filterData(data);
+  const noData = !loading && vitalData.length === 0;
 
-  // return <h1>HI</h1>;
-  return <Table data={vitalData} schema={schema} loading={loading || vitalsLoading} />;
+  return <Table data={vitalData} schema={schema} error={noData} loading={loading} />;
 };
 
 export default Vitals;

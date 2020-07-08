@@ -6,16 +6,12 @@ const Info = (props) => {
   const { text, icon } = props;
 
   return (
-    <Card shadow="dark" style={{ width: '400px', height: '80px', margin: 'auto' }}>
-      <div className="Info-wrapper">
-        <div className="Info-wrapper-icon">
-          <Icon name={icon} type="filled" />
-        </div>
-        <div className="Info-wrapper-heading">
-          <Heading size="l">{text}</Heading>
-        </div>
-      </div>
-    </Card>
+    <div className="Info-wrapper">
+      <Icon size="37" name={icon} type="filled" appearance="subtle" />
+      <Heading appearance="subtle" size="m">
+        {text}
+      </Heading>
+    </div>
   );
 };
 

@@ -141,39 +141,39 @@ const Summary = () => {
       <PageHeader {...pageheaderOptions} />
       <div className="Summary-body">
         <PatientInfo data={patientData} loading={patientLoading} />
-      </div>
-      <div className="Summary-table">
-        <div className="Summary-table-heading">
-          <Icon size="23" name="add_box" />
-          <Subheading>Vitals</Subheading>
+        <div className="Summary-table">
+          <div className="Summary-table-heading">
+            <Icon size="23" name="add_box" />
+            <Subheading>Vitals</Subheading>
+          </div>
+          <Vitals data={vitalsData} loading={vitalsLoading} />
         </div>
-        <Vitals data={vitalsData} loading={vitalsLoading} />
-      </div>
-      <div className="Summary-table">
-        <div className="Summary-table-heading">
-          <Icon size="23" name="emoji_people" />
-          <Subheading>Encounters</Subheading>
+        <div className="Summary-table">
+          <div className="Summary-table-heading">
+            <Icon size="23" name="emoji_people" />
+            <Subheading>Encounters</Subheading>
+          </div>
+          <Encounter
+            fhirServer={fhirServer}
+            serverHeaders={JSON.parse(serverHeaders)}
+            data={encounterData}
+            loading={encounterLoading}
+          />
         </div>
-        <Encounter
-          fhirServer={fhirServer}
-          serverHeaders={JSON.parse(serverHeaders)}
-          data={encounterData}
-          loading={encounterLoading}
-        />
-      </div>
-      <div className="Summary-table">
-        <div className="Summary-table-heading">
-          <Icon size="23" name="check_box" />
-          <Subheading>Condition</Subheading>
+        <div className="Summary-table">
+          <div className="Summary-table-heading">
+            <Icon size="23" name="check_box" />
+            <Subheading>Condition</Subheading>
+          </div>
+          <Condition data={conditionData} loading={conditionLoading} />
         </div>
-        <Condition data={conditionData} loading={conditionLoading} />
-      </div>
-      <div className="Summary-table">
-        <div className="Summary-table-heading">
-          <Icon size="23" name="event_note" />
-          <Subheading>Immunization</Subheading>
+        <div className="Summary-table">
+          <div className="Summary-table-heading">
+            <Icon size="23" name="event_note" />
+            <Subheading>Immunization</Subheading>
+          </div>
+          <Immunization data={immunizationData} loading={immuneLoading} />
         </div>
-        <Immunization data={immunizationData} loading={immuneLoading} />
       </div>
     </div>
   );

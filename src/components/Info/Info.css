@@ -2,18 +2,5 @@
 }
 
 .Info-wrapper {
-  display: flex;
-  width: 100%;
-  height: 80px;
-}
-
-.Info-wrapper-heading {
-  margin-left: 40px;
-  margin-top: 14px;
-}
-
-.Info-wrapper-icon {
-  transform: scale(3);
-  align-self: center;
-  margin-left: 20px;
+  text-align: center;
 }

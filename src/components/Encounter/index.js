@@ -7,8 +7,9 @@ import Info from '../Info';
 const Encounter = (props) => {
   const { data = [], fhirServer, serverHeaders, loading } = props;
 
-  const [encData, setEncData] = useState([]);
   const [encLoading, setEncLoading] = useState(true);
+  const [encData, setEncData] = useState([]);
+  const [noData, setNoData] = useState(false);
 
   // send api request
   const getRefResource = (baseAddress, headers, ref) => {
@@ -97,25 +98,19 @@ const Encounter = (props) => {
     return encData;
   };
 
-  // const tableData = () => {
   useEffect(() => {
     setEncLoading(true);
-    filterData(fhirServer, serverHeaders, data)
-      .then((res) => {
-        setEncData(res);
-        setEncLoading(false);
-      })
-      .catch((err) => alert(err));
-  }, [data]);
+    filterData(fhirServer, serverHeaders, data).then((encData) => {
+      setEncData(encData);
+      setEncLoading(false);
+      if (encData && encData.length === 0 && !(loading || encLoading)) {
+        setNoData(true);
+      }
+    });
+  }, [encData.length, loading]);
 
-  return <Table data={encData} loading={loading || encLoading} schema={schema} />;
+  // return <>{console.log(data.length, encData.length, loading, encLoading, noData)}</>;
+  return <Table data={encData} error={noData} loading={loading || encLoading} schema={schema} />;
 };
-
-//   return filteredData.length === 0 ? (
-//     <Info text="No data found" icon="error" />
-//   ) : (
-//     <Table data={filteredData} schema={schema} withPagination pageSize="9" showMenu />
-//   );
-// };
 
 export default Encounter;
