@@ -13,9 +13,10 @@ import {
 } from '@innovaccer/design-system';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
-import { getPatients } from '../api';
-import PatientList from '../components/PatientList';
+import { getPatients, getNext } from '../api';
+//import PatientList from '../components/PatientList';
 import Info from '../components/Info';
+import { PatientList } from '@innovaccer/fhir-components';
 
 const Home = () => {
   let history = useHistory();
@@ -128,8 +129,8 @@ const Home = () => {
       });
   };
 
-  const drillToPatientInfo = (ev, id) => {
-    history.push(`/patients/${id}`);
+  const drillToPatientInfo = (ev, res) => {
+    history.push(`/patients/${res.id}`);
   };
 
   const genderOptions = [
@@ -137,14 +138,29 @@ const Home = () => {
     { label: 'Female', value: 'female' }
   ];
 
+  const loadMore = (ev, next) => {
+    alert(next);
+    getNext(next, JSON.parse(serverHeaders))
+      .then((data) => {
+        let temp = patients;
+        data.data.entry = [...temp.entry, ...data.data.entry];
+        setPatients(data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(true);
+        setErrText('Something went wrong');
+      });
+  };
+
   const renderPatientList = () => {
     if (error) {
       return <Info text={errText} icon="error" />;
     } else {
       if (patients && patients.entry && patients.entry.length > 0) {
         return (
-          <div style={{ height: 'calc(100vh - 112px', overflowY: 'scroll' }}>
-            <PatientList data={patients} onClick={drillToPatientInfo} />
+          <div className="Home-PatientList" style={{ height: 'calc(100vh - 112px)', overflowY: 'scroll' }}>
+            <PatientList resources={[patients]} onClick={drillToPatientInfo} loadMore={loadMore} />
           </div>
         );
       }
