@@ -66,6 +66,12 @@ export const getImmunizationData = (serverAddress, serverHeaders = {}) => (id) =
   });
 };
 
+export const getAllergyIntoleranceData = (serverAddress, serverHeaders = {}) => (id) => {
+  return axios.get(`${serverAddress}/AllergyIntolerance?patient=${id}`, {
+    headers: serverHeaders
+  });
+};
+
 export const getNext = (nextLink, serverHeaders = {}) => {
   return axios.get(`${nextLink}`, {
     headers: serverHeaders

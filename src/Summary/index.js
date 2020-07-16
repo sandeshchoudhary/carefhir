@@ -2,13 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { PageHeader, Breadcrumbs, Card, Icon, Subheading } from '@innovaccer/design-system';
 import { useHistory, useParams } from 'react-router-dom';
 import './Summary.css';
-import { getPatientData, getVitalsData, getEncounterData, getConditionData, getImmunizationData } from '../api';
+import {
+  getPatientData,
+  getVitalsData,
+  getEncounterData,
+  getConditionData,
+  getImmunizationData,
+  getAllergyIntoleranceData
+} from '../api';
 import PatientInfo from '../components/PatientInfo';
-import Vitals from '../components/Vitals';
+//import Vitals from '../components/Vitals';
 import Encounter from '../components/Encounter';
 import Condition from '../components/Condition';
-import Immunization from '../components/Immunization';
+//import Immunization from '../components/Immunization';
 import Info from '../components/Info';
+import { ImmunizationTable, AllergyIntoleranceTable, VitalsTable } from '@innovaccer/fhir-components';
 
 const Summary = () => {
   let history = useHistory();
@@ -33,6 +41,7 @@ const Summary = () => {
   const [encounterData, setEncounterData] = useState([]);
   const [conditionData, setConditionData] = useState([]);
   const [immunizationData, setImmunizationData] = useState([]);
+  const [allergyIntoleranceData, setAllergyIntoleranceData] = useState([]);
 
   // state for error
   const [error, setError] = useState(false);
@@ -43,6 +52,7 @@ const Summary = () => {
   const [encounterLoading, setEncounterLoading] = useState(true);
   const [conditionLoading, setConditionLoading] = useState(true);
   const [immuneLoading, setImmuneLoading] = useState(true);
+  const [allergyIntoleranceLoading, setAllergyIntoleranceLoading] = useState(true);
 
   useEffect(() => {
     setServer(getServer());
@@ -67,8 +77,7 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          const filtered = data.data.entry.map((e) => e.resource);
-          setVitalsData(filtered);
+          setVitalsData(data.data);
           setVitalsLoading(false);
         })
         .catch((err) => {
@@ -109,9 +118,21 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          const filtered = data.data.entry.map((e) => e.resource);
-          setImmunizationData(filtered);
+          setImmunizationData(data.data);
           setImmuneLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setError(true);
+        });
+
+      getAllergyIntoleranceData(
+        fhirServer,
+        JSON.parse(serverHeaders)
+      )(patientId)
+        .then((data) => {
+          setAllergyIntoleranceData(data.data);
+          setAllergyIntoleranceLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -133,7 +154,6 @@ const Summary = () => {
     title: `Patient Summary`,
     breadcrumb: <Breadcrumbs list={breadcrumbData} onClick={(link) => history.push(link)} />
   };
-
   return error ? (
     <Info text="Something went wrong" icon="error" />
   ) : (
@@ -141,13 +161,7 @@ const Summary = () => {
       <PageHeader {...pageheaderOptions} />
       <div className="Summary-body">
         <PatientInfo data={patientData} loading={patientLoading} />
-        <div className="Summary-table">
-          <div className="Summary-table-heading">
-            <Icon size="23" name="add_box" />
-            <Subheading>Vitals</Subheading>
-          </div>
-          <Vitals data={vitalsData} loading={vitalsLoading} />
-        </div>
+
         <div className="Summary-table">
           <div className="Summary-table-heading">
             <Icon size="23" name="emoji_people" />
@@ -167,13 +181,9 @@ const Summary = () => {
           </div>
           <Condition data={conditionData} loading={conditionLoading} />
         </div>
-        <div className="Summary-table">
-          <div className="Summary-table-heading">
-            <Icon size="23" name="event_note" />
-            <Subheading>Immunization</Subheading>
-          </div>
-          <Immunization data={immunizationData} loading={immuneLoading} />
-        </div>
+        <ImmunizationTable resources={immunizationData.entry} loading={immuneLoading} />
+        <AllergyIntoleranceTable resources={allergyIntoleranceData.entry} loading={allergyIntoleranceLoading} />
+        <VitalsTable resources={vitalsData.entry} loading={vitalsLoading} />
       </div>
     </div>
   );
