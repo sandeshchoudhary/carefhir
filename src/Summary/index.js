@@ -12,11 +12,17 @@ import {
 } from '../api';
 import PatientInfo from '../components/PatientInfo';
 //import Vitals from '../components/Vitals';
-import Encounter from '../components/Encounter';
-import Condition from '../components/Condition';
+//import Encounter from '../components/Encounter';
+//import Condition from '../components/Condition';
 //import Immunization from '../components/Immunization';
 import Info from '../components/Info';
-import { ImmunizationTable, AllergyIntoleranceTable, VitalsTable } from '@innovaccer/fhir-components';
+import {
+  ImmunizationTable,
+  AllergyIntoleranceTable,
+  VitalsTable,
+  Encounters,
+  Condition
+} from '@innovaccer/fhir-components';
 
 const Summary = () => {
   let history = useHistory();
@@ -152,7 +158,7 @@ const Summary = () => {
 
   const pageheaderOptions = {
     title: `Patient Summary`,
-    breadcrumb: <Breadcrumbs list={breadcrumbData} onClick={(link) => history.push(link)} />
+    breadcrumbs: <Breadcrumbs list={breadcrumbData} onClick={(link) => history.push(link)} />
   };
   return error ? (
     <Info text="Something went wrong" icon="error" />
@@ -161,29 +167,24 @@ const Summary = () => {
       <PageHeader {...pageheaderOptions} />
       <div className="Summary-body">
         <PatientInfo data={patientData} loading={patientLoading} />
-
-        <div className="Summary-table">
-          <div className="Summary-table-heading">
-            <Icon size="23" name="emoji_people" />
-            <Subheading>Encounters</Subheading>
-          </div>
-          <Encounter
-            fhirServer={fhirServer}
-            serverHeaders={JSON.parse(serverHeaders)}
-            data={encounterData}
-            loading={encounterLoading}
-          />
+        <Encounters
+          fhirServer={`${fhirServer}`}
+          serverHeaders={{}}
+          resources={encounterData}
+          loading={encounterLoading}
+        />
+        <div style={{ paddingTop: '25px', paddingBottom: '25px' }}>
+          <Condition resources={conditionData} loading={conditionLoading} />
         </div>
-        <div className="Summary-table">
-          <div className="Summary-table-heading">
-            <Icon size="23" name="check_box" />
-            <Subheading>Condition</Subheading>
-          </div>
-          <Condition data={conditionData} loading={conditionLoading} />
+        <div style={{ paddingTop: '25px', paddingBottom: '25px' }}>
+          <ImmunizationTable resources={immunizationData.entry} loading={immuneLoading} />
         </div>
-        <ImmunizationTable resources={immunizationData.entry} loading={immuneLoading} />
-        <AllergyIntoleranceTable resources={allergyIntoleranceData.entry} loading={allergyIntoleranceLoading} />
-        <VitalsTable resources={vitalsData.entry} loading={vitalsLoading} />
+        <div style={{ paddingTop: '25px', paddingBottom: '25px' }}>
+          <AllergyIntoleranceTable resources={allergyIntoleranceData.entry} loading={allergyIntoleranceLoading} />
+        </div>
+        <div style={{ paddingTop: '25px', paddingBottom: '25px' }}>
+          <VitalsTable resources={vitalsData.entry} loading={vitalsLoading} />
+        </div>
       </div>
     </div>
   );
