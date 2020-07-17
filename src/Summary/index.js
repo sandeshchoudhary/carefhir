@@ -10,13 +10,14 @@ import {
   getImmunizationData,
   getAllergyIntoleranceData
 } from '../api';
-import PatientInfo from '../components/PatientInfo';
+// import PatientInfo from '../components/PatientInfo';
 //import Vitals from '../components/Vitals';
 //import Encounter from '../components/Encounter';
 //import Condition from '../components/Condition';
 //import Immunization from '../components/Immunization';
 import Info from '../components/Info';
 import {
+  PatientCard,
   ImmunizationTable,
   AllergyIntoleranceTable,
   VitalsTable,
@@ -83,7 +84,8 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          setVitalsData(data.data);
+          const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
+          setVitalsData(filtered);
           setVitalsLoading(false);
         })
         .catch((err) => {
@@ -110,7 +112,7 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          const filtered = data.data.entry.map((e) => e.resource);
+          const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
           setConditionData(filtered);
           setConditionLoading(false);
         })
@@ -124,7 +126,9 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          setImmunizationData(data.data);
+          console.log(data);
+          const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
+          setImmunizationData(filtered);
           setImmuneLoading(false);
         })
         .catch((err) => {
@@ -137,7 +141,9 @@ const Summary = () => {
         JSON.parse(serverHeaders)
       )(patientId)
         .then((data) => {
-          setAllergyIntoleranceData(data.data);
+          console.log(data);
+          const filtered = data.data && data.data.entry ? data.data.entry.map((e) => e.resource) : [];
+          setAllergyIntoleranceData(filtered);
           setAllergyIntoleranceLoading(false);
         })
         .catch((err) => {
@@ -166,24 +172,32 @@ const Summary = () => {
     <div className="Summary">
       <PageHeader {...pageheaderOptions} />
       <div className="Summary-body">
-        <PatientInfo data={patientData} loading={patientLoading} />
-        <Encounters
-          fhirServer={`${fhirServer}`}
-          serverHeaders={{}}
-          resources={encounterData}
-          loading={encounterLoading}
-        />
-        <div style={{ paddingTop: '25px', paddingBottom: '25px' }}>
+        <div className="Summary-card">
+          <PatientCard
+            resource={patientData}
+            details={['name', 'dob', 'gender', 'maritalStatus', 'telecom']}
+            loading={patientLoading}
+          />
+        </div>
+        <div className="Summary-table">
+          <Encounters
+            fhirServer={`${fhirServer}`}
+            serverHeaders={{}}
+            resources={encounterData}
+            loading={encounterLoading}
+          />
+        </div>
+        <div className="Summary-table">
           <Condition resources={conditionData} loading={conditionLoading} />
         </div>
-        <div style={{ paddingTop: '25px', paddingBottom: '25px' }}>
-          <ImmunizationTable resources={immunizationData.entry} loading={immuneLoading} />
+        <div className="Summary-table">
+          <ImmunizationTable resources={immunizationData} loading={immuneLoading} />
         </div>
-        <div style={{ paddingTop: '25px', paddingBottom: '25px' }}>
-          <AllergyIntoleranceTable resources={allergyIntoleranceData.entry} loading={allergyIntoleranceLoading} />
+        <div className="Summary-table">
+          <AllergyIntoleranceTable resources={allergyIntoleranceData} loading={allergyIntoleranceLoading} />
         </div>
-        <div style={{ paddingTop: '25px', paddingBottom: '25px' }}>
-          <VitalsTable resources={vitalsData.entry} loading={vitalsLoading} />
+        <div className="Summary-table">
+          <VitalsTable resources={vitalsData} loading={vitalsLoading} />
         </div>
       </div>
     </div>
