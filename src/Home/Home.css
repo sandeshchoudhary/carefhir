@@ -3,6 +3,13 @@
   height: 100vh;
 }
 
+.Home-PatientList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .PageHeader-wrapper {
   border-bottom: var(--border);
   padding: var(--spacing) var(--spacing-2);

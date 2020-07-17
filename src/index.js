@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import '@innovaccer/fhir-components/css';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';

@@ -14,15 +14,16 @@
 .Summary-table {
   width: 50%;
   height: 300px;
-  margin-bottom: 50px;
-  margin-top: 10px;
+  margin-bottom: 30px;
+  margin-top: 30px;
 }
 
-.Summary-table-heading {
-  display: flex;
-  background-color: var(--secondary);
+.Summary-card {
+  width: 45%;
+  height: 120px;
 }
 
-.Summary-table-heading .Subheading {
-  margin-left: 10px;
+.Summary-table .Card {
+  width: 100%;
+  height: 100%;
 }

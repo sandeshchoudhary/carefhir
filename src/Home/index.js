@@ -39,6 +39,7 @@ const Home = () => {
   const [patients, setPatients] = useState([]);
   const [error, setError] = useState(false);
   const [errText, setErrText] = useState('');
+  const [listLoading, setListLoading] = useState(true);
 
   const onModalClose = () => {
     if (getServer()) {
@@ -91,12 +92,14 @@ const Home = () => {
     setHeaders(getHeaders());
     setError(false);
     if (getServer()) {
+      setListLoading(true);
       getPatients(
         fhirServer,
         JSON.parse(serverHeaders)
       )({ name: searchQuery, gender: searchGender })
         .then((data) => {
           setPatients(data.data);
+          setListLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -139,7 +142,7 @@ const Home = () => {
   ];
 
   const loadMore = (ev, next) => {
-    alert(next);
+    // alert(next);
     getNext(next, JSON.parse(serverHeaders))
       .then((data) => {
         let temp = patients;
@@ -157,13 +160,18 @@ const Home = () => {
     if (error) {
       return <Info text={errText} icon="error" />;
     } else {
-      if (patients && patients.entry && patients.entry.length > 0) {
-        return (
-          <div className="Home-PatientList" style={{ height: 'calc(100vh - 112px)', overflowY: 'scroll' }}>
-            <PatientList resources={[patients]} onClick={drillToPatientInfo} loadMore={loadMore} />
+      return (
+        <div className="Home-PatientList">
+          <div style={{ height: 'calc(100vh - 112px)', width: '45%', overflowY: 'scroll' }}>
+            <PatientList
+              resources={[patients]}
+              onClick={drillToPatientInfo}
+              loading={listLoading}
+              loadMore={loadMore}
+            />
           </div>
-        );
-      }
+        </div>
+      );
     }
   };
 
