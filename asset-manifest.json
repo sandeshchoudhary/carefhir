@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/carefhir/static/css/main.4331f0ae.chunk.css",
-    "main.js": "/carefhir/static/js/main.903e1924.chunk.js",
-    "main.js.map": "/carefhir/static/js/main.903e1924.chunk.js.map",
+    "main.css": "/carefhir/static/css/main.3f6250e1.chunk.css",
+    "main.js": "/carefhir/static/js/main.7ed12b30.chunk.js",
+    "main.js.map": "/carefhir/static/js/main.7ed12b30.chunk.js.map",
     "runtime-main.js": "/carefhir/static/js/runtime-main.29b57bba.js",
     "runtime-main.js.map": "/carefhir/static/js/runtime-main.29b57bba.js.map",
-    "static/js/2.5cb41807.chunk.js": "/carefhir/static/js/2.5cb41807.chunk.js",
-    "static/js/2.5cb41807.chunk.js.map": "/carefhir/static/js/2.5cb41807.chunk.js.map",
+    "static/js/2.12f14276.chunk.js": "/carefhir/static/js/2.12f14276.chunk.js",
+    "static/js/2.12f14276.chunk.js.map": "/carefhir/static/js/2.12f14276.chunk.js.map",
     "index.html": "/carefhir/index.html",
-    "precache-manifest.f74efbc9082863b2a8d4536d37e14009.js": "/carefhir/precache-manifest.f74efbc9082863b2a8d4536d37e14009.js",
+    "precache-manifest.cee5e322515886c693ff0c02b38dfc03.js": "/carefhir/precache-manifest.cee5e322515886c693ff0c02b38dfc03.js",
     "service-worker.js": "/carefhir/service-worker.js",
-    "static/css/main.4331f0ae.chunk.css.map": "/carefhir/static/css/main.4331f0ae.chunk.css.map",
-    "static/js/2.5cb41807.chunk.js.LICENSE.txt": "/carefhir/static/js/2.5cb41807.chunk.js.LICENSE.txt"
+    "static/css/main.3f6250e1.chunk.css.map": "/carefhir/static/css/main.3f6250e1.chunk.css.map",
+    "static/js/2.12f14276.chunk.js.LICENSE.txt": "/carefhir/static/js/2.12f14276.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.29b57bba.js",
-    "static/js/2.5cb41807.chunk.js",
-    "static/css/main.4331f0ae.chunk.css",
-    "static/js/main.903e1924.chunk.js"
+    "static/js/2.12f14276.chunk.js",
+    "static/css/main.3f6250e1.chunk.css",
+    "static/js/main.7ed12b30.chunk.js"
   ]
 }
